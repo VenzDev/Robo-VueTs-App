@@ -8,16 +8,16 @@
       ></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto">
-          <b-nav-item class="mx-2" active-class="active" to="/link">
-            <span>Link</span>
+          <b-nav-item active-class="active" to="/link">
+            <span>Home</span>
           </b-nav-item>
           <b-nav-item active-class="active" to="/super">
             <span>Link</span></b-nav-item
           >
-          <b-nav-item active-class="active">
+          <b-nav-item active-class="active" to="/login">
             <span>Login</span>
           </b-nav-item>
-          <b-nav-item active-class="active">
+          <b-nav-item active-class="active" to="/register">
             <span>Register</span>
           </b-nav-item>
           <div class="d-none d-md-flex">
