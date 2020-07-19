@@ -6,12 +6,13 @@
           <div class="text-center">
             <h2 class="text-white mb-3">Login</h2>
           </div>
-          <b-form>
+          <b-form @submit="checkForm">
             <b-form-group>
               <input
                 class="form-control form-input"
                 placeholder="Email"
-                type="text"
+                type="Email"
+                v-model="email"
               />
             </b-form-group>
             <b-form-group>
@@ -19,11 +20,16 @@
                 class="form-control form-input"
                 placeholder="Password"
                 type="password"
+                v-model="password"
               />
             </b-form-group>
-            <b-button variant="primary" class="btn-block form-button"
-              >Login</b-button
+            <b-button
+              type="submit"
+              variant="primary"
+              class="btn-block form-button"
             >
+              Login
+            </b-button>
           </b-form>
         </div>
       </b-col>
@@ -33,20 +39,16 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import "@/styles/form.scss";
 
 @Component
-export default class Login extends Vue {}
-</script>
+export default class Login extends Vue {
+  email = "";
+  password = "";
 
-<style lang="scss" scoped>
-.form-input {
-  border: none;
-  border-radius: 10rem;
-  padding: 1.5rem 1rem;
+  checkForm(e: Event) {
+    e.preventDefault();
+    console.log({ email: this.email, password: this.password });
+  }
 }
-.form-button {
-  padding: 0.75rem 1rem;
-  border-radius: 10rem;
-  margin-top: 2rem;
-}
-</style>
+</script>

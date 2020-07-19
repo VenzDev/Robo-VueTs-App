@@ -6,13 +6,14 @@
           <div class="text-center">
             <h2 class="text-white mb-3">Register</h2>
           </div>
-          <b-form>
+          <b-form @submit="checkForm">
             <b-row class="form-group">
               <b-col class="mb-3 mb-sm-0" sm="6">
                 <input
                   class="form-control form-input"
                   placeholder="Name"
                   type="text"
+                  v-model="name"
                 />
               </b-col>
               <b-col sm="6">
@@ -20,6 +21,7 @@
                   class="form-control form-input"
                   placeholder="Surname"
                   type="text"
+                  v-model="surname"
                 />
               </b-col>
             </b-row>
@@ -28,6 +30,7 @@
                 class="form-control form-input"
                 placeholder="Email"
                 type="text"
+                v-model="email"
               />
             </b-form-group>
             <b-form-group>
@@ -35,6 +38,7 @@
                 class="form-control form-input"
                 placeholder="Password"
                 type="password"
+                v-model="password"
               />
             </b-form-group>
             <b-form-group>
@@ -42,11 +46,22 @@
                 class="form-control form-input"
                 placeholder="Repeat Password"
                 type="password"
+                v-model="repeatPassword"
               />
             </b-form-group>
-            <b-button variant="primary" class="btn-block form-button"
-              >Register</b-button
+            <div
+              v-if="errorMessage"
+              class="bg-white p-1 text-danger errorMessage"
             >
+              <h5>{{ errorMessage }}</h5>
+            </div>
+            <b-button
+              type="submit"
+              variant="primary"
+              class="btn-block form-button"
+            >
+              Register
+            </b-button>
           </b-form>
         </div>
       </b-col>
@@ -56,21 +71,42 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import "@/styles/form.scss";
 
 @Component
-export default class Register extends Vue {}
-</script>
+export default class Register extends Vue {
+  name = "";
+  surname = "";
+  email = "";
+  password = "";
+  repeatPassword = "";
 
-<style lang="scss" scoped>
-.form-input {
-  border: none;
-  font-size: 1rem;
-  border-radius: 10rem;
-  padding: 1.5rem 1rem;
+  errorMessage = "";
+
+  $toast!: {
+    open: Function;
+  };
+
+  checkForm(e: Event) {
+    e.preventDefault();
+    this.$bvToast.show("b-toaster-top-center");
+    console.log({
+      name: this.name,
+      surname: this.surname,
+      email: this.email,
+      password: this.password,
+      repeatPassword: this.repeatPassword
+    });
+
+    if (this.name.length === 0) {
+      this.$toast.open({
+        message: "Inputs cannot be empty!",
+        type: "error",
+        duration: 5000,
+        dismissible: true,
+        position: "top"
+      });
+    }
+  }
 }
-.form-button {
-  border-radius: 10rem;
-  margin: 1rem 0;
-  margin-top: 2rem;
-}
-</style>
+</script>

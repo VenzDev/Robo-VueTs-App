@@ -15,7 +15,7 @@ import Header from "@/components/Header.vue";
 export default class App extends Vue {}
 </script>
 
-<style>
+<style lang="scss">
 .wrapper {
   min-height: 100vh;
   padding-top: 100px;
