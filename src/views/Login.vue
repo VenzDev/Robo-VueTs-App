@@ -28,7 +28,8 @@
               variant="primary"
               class="btn-block form-button"
             >
-              Login
+              <span v-if="isLoading">Loading</span>
+              <span v-else>Login</span>
             </b-button>
           </b-form>
         </div>
@@ -39,6 +40,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import user from "@/store/modules/user";
 import "@/styles/form.scss";
 
 @Component
@@ -46,11 +48,14 @@ export default class Login extends Vue {
   email = "";
   password = "";
 
+  isLoading = false;
+
   checkForm(e: Event) {
-    //to dobrze
-    //const value = (e.target as HTMLInputElement).value;
     e.preventDefault();
-    console.log({ email: this.email, password: this.password });
+    this.isLoading = true;
+    user.login({ email: this.email, password: this.password }).then(() => {
+      this.isLoading = false;
+    });
   }
 }
 </script>
