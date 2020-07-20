@@ -47,6 +47,8 @@ export default class Login extends Vue {
   password = "";
 
   checkForm(e: Event) {
+    //to dobrze
+    //const value = (e.target as HTMLInputElement).value;
     e.preventDefault();
     console.log({ email: this.email, password: this.password });
   }

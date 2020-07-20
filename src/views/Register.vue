@@ -60,8 +60,13 @@
               variant="primary"
               class="btn-block form-button"
             >
-              Register
+              <v-wait for="incrementing count">
+                <template slot="waiting">waiting</template>
+                Register
+              </v-wait>
             </b-button>
+            <div v-if="isLoading">loading</div>
+            <div>{{ count }}</div>
           </b-form>
         </div>
       </b-col>
@@ -71,9 +76,19 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { mapGetters } from "vuex";
+import { mapWaitingGetters, mapWaitingActions } from "vue-wait";
 import "@/styles/form.scss";
 
-@Component
+@Component({
+  computed: {
+    ...mapGetters(["count"]),
+    ...mapWaitingGetters({ isIncrementing: "incrementing count" })
+  },
+  methods: {
+    ...mapWaitingActions({ incrementAsync: "incrementing count" })
+  }
+})
 export default class Register extends Vue {
   name = "";
   surname = "";
@@ -83,8 +98,14 @@ export default class Register extends Vue {
 
   errorMessage = "";
 
+  isLoading = false;
+
   $toast!: {
     open: Function;
+  };
+  $l!: {
+    start: Function;
+    end: Function;
   };
 
   checkForm(e: Event) {
@@ -97,7 +118,12 @@ export default class Register extends Vue {
       password: this.password,
       repeatPassword: this.repeatPassword
     });
-
+    this.$l.start("incrementing count");
+    this.isLoading = true;
+    this.$store.dispatch("incrementAsync").then(() => {
+      this.$l.end("incrementing count");
+      this.isLoading = false;
+    });
     if (this.name.length === 0) {
       this.$toast.open({
         message: "Inputs cannot be empty!",
