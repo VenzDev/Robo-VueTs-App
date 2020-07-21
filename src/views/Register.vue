@@ -49,24 +49,13 @@
                 v-model="repeatPassword"
               />
             </b-form-group>
-            <div
-              v-if="errorMessage"
-              class="bg-white p-1 text-danger errorMessage"
-            >
-              <h5>{{ errorMessage }}</h5>
-            </div>
             <b-button
               type="submit"
               variant="primary"
               class="btn-block form-button"
-            >
-              <v-wait for="incrementing count">
-                <template slot="waiting">waiting</template>
-                Register
-              </v-wait>
+              ><LoadingSpinner v-if="isLoading" />
+              <span v-else>Register</span>
             </b-button>
-            <div v-if="isLoading">loading</div>
-            <div>{{ count }}</div>
           </b-form>
         </div>
       </b-col>
@@ -76,19 +65,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
-import { mapWaitingGetters, mapWaitingActions } from "vue-wait";
 import "@/styles/form.scss";
+import { apiRegister } from "@/store/api";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import { toastSuccess, toastError } from "@/utils/toastConfig";
 
-@Component({
-  computed: {
-    ...mapGetters(["count"]),
-    ...mapWaitingGetters({ isIncrementing: "incrementing count" })
-  },
-  methods: {
-    ...mapWaitingActions({ incrementAsync: "incrementing count" })
-  }
-})
+@Component({ components: { LoadingSpinner } })
 export default class Register extends Vue {
   name = "";
   surname = "";
@@ -103,36 +85,34 @@ export default class Register extends Vue {
   $toast!: {
     open: Function;
   };
-  $l!: {
-    start: Function;
-    end: Function;
-  };
 
   checkForm(e: Event) {
     e.preventDefault();
-    this.$bvToast.show("b-toaster-top-center");
-    console.log({
+
+    //Need validate inputs
+    if (
+      this.name.trim().length === 0 ||
+      this.surname.trim().length === 0 ||
+      this.password.trim().length === 0 ||
+      this.repeatPassword.trim().length === 0 ||
+      this.email.trim().length === 0
+    ) {
+      this.$toast.open(toastError("Empty inputs!"));
+      return;
+    }
+    this.isLoading = true;
+    apiRegister({
       name: this.name,
       surname: this.surname,
       email: this.email,
-      password: this.password,
-      repeatPassword: this.repeatPassword
-    });
-    this.$l.start("incrementing count");
-    this.isLoading = true;
-    this.$store.dispatch("incrementAsync").then(() => {
-      this.$l.end("incrementing count");
-      this.isLoading = false;
-    });
-    if (this.name.length === 0) {
-      this.$toast.open({
-        message: "Inputs cannot be empty!",
-        type: "error",
-        duration: 5000,
-        dismissible: true,
-        position: "top"
-      });
-    }
+      password: this.password
+    })
+      .then(() => {
+        this.$toast.open(toastSuccess("Now you can log in :)"));
+        this.$router.push("/login");
+      })
+      .catch(err => console.log(err))
+      .finally(() => (this.isLoading = false));
   }
 }
 </script>

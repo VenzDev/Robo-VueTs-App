@@ -20,3 +20,10 @@ export interface UserState {
   user: User | null;
   errorMessage: string | null;
 }
+
+export interface RegisterSubmit {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+}
