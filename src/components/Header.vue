@@ -8,12 +8,7 @@
       ></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto">
-          <b-nav-item
-            v-if="userData"
-            class="d-md-none"
-            active-class="active"
-            to="/link"
-          >
+          <b-nav-item class="d-md-none" active-class="active" to="/link">
             <span>User Account</span>
           </b-nav-item>
           <b-nav-item active-class="active" to="/link">
@@ -22,25 +17,24 @@
           <b-nav-item active-class="active" to="/super">
             <span>Link</span></b-nav-item
           >
-          <b-nav-item active-class="active" to="/login">
+          <b-nav-item v-if="!user" active-class="active" to="/login">
             <span>Login</span>
           </b-nav-item>
-          <b-nav-item active-class="active" to="/register">
+          <b-nav-item v-if="!user" active-class="active" to="/register">
             <span>Register</span>
           </b-nav-item>
           <div class="d-none d-md-flex">
             <div
+              v-if="user"
               class="d-flex justify-content-center align-items-center"
-              v-if="userData"
             >
               <div class="topbar-divider"></div>
-              <p class="align-middle my-0 mx-2">
-                {{ userData.name + " " + userData.surname }}
+              <p class="align-middle my-0 mr-3">
+                {{ user.name + " " + user.surname }}
               </p>
               <b-avatar
                 class="avatar"
-                variant="primary"
-                :text="userData.name[0] + userData.surname[0]"
+                :text="user.name[0] + user.surname[0]"
               ></b-avatar>
             </div>
           </div>
@@ -53,10 +47,11 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import user from "@/store/modules/user";
+import { User } from "../store/models";
 
 @Component
 export default class Header extends Vue {
-  get userData() {
+  get user(): User | null {
     return user.userData;
   }
 }

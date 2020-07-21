@@ -28,7 +28,7 @@
               variant="primary"
               class="btn-block form-button"
             >
-              <span v-if="isLoading">Loading</span>
+              <LoadingSpinner v-if="isLoading" />
               <span v-else>Login</span>
             </b-button>
           </b-form>
@@ -40,22 +40,35 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import user from "@/store/modules/user";
 import "@/styles/form.scss";
+import user from "@/store/modules/user";
+import { toastSuccess, toastError } from "@/utils/toastConfig";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
-@Component
+@Component({ components: { LoadingSpinner } })
 export default class Login extends Vue {
   email = "";
   password = "";
 
   isLoading = false;
 
+  $toast!: {
+    open: Function;
+  };
+
   checkForm(e: Event) {
     e.preventDefault();
     this.isLoading = true;
-    user.login({ email: this.email, password: this.password }).then(() => {
-      this.isLoading = false;
-    });
+    user
+      .login({ email: this.email, password: this.password })
+      .then(() => {
+        this.$toast.open(toastSuccess("Logged Successfully!"));
+        this.$router.push("/");
+      })
+      .catch((err: Error) => {
+        this.$toast.open(toastError(err.message));
+      })
+      .finally(() => (this.isLoading = false));
   }
 }
 </script>

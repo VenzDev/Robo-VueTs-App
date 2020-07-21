@@ -15,3 +15,8 @@ export interface UserSubmit {
   email: string;
   password: string;
 }
+
+export interface UserState {
+  user: User | null;
+  errorMessage: string | null;
+}

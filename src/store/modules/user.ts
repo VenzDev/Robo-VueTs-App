@@ -6,10 +6,8 @@ import {
   Action
 } from "vuex-module-decorators";
 import store from "@/store";
-import { helperApi } from "../fakeApi";
 import { User, UserResponse, UserSubmit } from "../models";
 import { apiLogin } from "../api";
-import { TableSimplePlugin } from "bootstrap-vue";
 
 @Module({
   namespaced: true,
@@ -19,7 +17,7 @@ import { TableSimplePlugin } from "bootstrap-vue";
 })
 class UserModule extends VuexModule {
   user: User | null = null;
-  errorMessage!: string;
+  errorMessage: string | null = null;
 
   get userData() {
     return this.user;
@@ -39,21 +37,23 @@ class UserModule extends VuexModule {
     this.errorMessage = message;
   }
 
-  @Action({ commit: "setUser" })
+  @Action({ rawError: true })
   async login(userSubmit: UserSubmit) {
     try {
-      const user: UserResponse = await apiLogin(
+      const data: UserResponse = await apiLogin(
         userSubmit.email,
         userSubmit.password
       );
-      localStorage.setItem("token", user.token);
-      return {
-        name: user.name,
-        surname: user.surname,
-        email: user.email
-      };
+      localStorage.setItem("token", data.token);
+      this.context.commit("setUser", {
+        name: data.name,
+        surname: data.surname,
+        email: data.email
+      });
+      return "success";
     } catch (err) {
-      console.log(err);
+      this.context.commit("setErrorMessage", err.response.data.message);
+      throw new Error(err.response.data.message);
     }
   }
 }
