@@ -27,3 +27,8 @@ export interface RegisterSubmit {
   email: string;
   password: string;
 }
+export interface UserAuthResponse {
+  name: string;
+  surname: string;
+  email: string;
+}

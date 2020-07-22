@@ -6,8 +6,8 @@ import {
   Action
 } from "vuex-module-decorators";
 import store from "@/store";
-import { User, UserResponse, UserSubmit } from "../models";
-import { apiLogin } from "../api";
+import { User, UserResponse, UserSubmit, UserAuthResponse } from "../models";
+import { apiLogin, apiAuth } from "../api";
 
 @Module({
   namespaced: true,
@@ -53,6 +53,16 @@ class UserModule extends VuexModule {
       return "success";
     } catch (err) {
       this.context.commit("setErrorMessage", err.response.data.message);
+      throw new Error(err.response.data.message);
+    }
+  }
+  @Action({ rawError: true })
+  async auth() {
+    try {
+      const data: UserAuthResponse = await apiAuth();
+      this.context.commit("setUser", data);
+    } catch (err) {
+      localStorage.removeItem("token");
       throw new Error(err.response.data.message);
     }
   }
