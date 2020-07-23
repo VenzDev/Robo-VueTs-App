@@ -14,8 +14,8 @@
           <b-nav-item active-class="active" to="/link">
             <span>Home</span>
           </b-nav-item>
-          <b-nav-item active-class="active" to="/super">
-            <span>Link</span></b-nav-item
+          <b-nav-item v-if="user" active-class="active" to="/robots">
+            <span>Robots</span></b-nav-item
           >
           <b-nav-item v-if="!user" active-class="active" to="/login">
             <span>Login</span>

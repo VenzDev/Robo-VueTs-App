@@ -27,6 +27,15 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "login" */ "../views/Login.vue")
   },
   {
+    path: "/robots",
+    name: "Robots",
+    meta: {
+      logged: true
+    },
+    component: () =>
+      import(/* webpackChunkName: "Robots" */ "../views/Robots.vue")
+  },
+  {
     path: "/register",
     name: "Register",
     meta: {
@@ -46,8 +55,15 @@ router.beforeEach(async (to, from, next) => {
   if (localStorage.getItem("token") && !user.userData) {
     await user.auth();
   }
-  if (to.matched.some(record => record.meta.guest)) {
-    if (localStorage.getItem("token") && user.userData) {
+  const isUser = localStorage.getItem("token") && user.userData;
+  if (to.matched.some(record => record.meta.logged)) {
+    if (!isUser) {
+      next({ path: "/login" });
+    } else {
+      next();
+    }
+  } else if (to.matched.some(record => record.meta.guest)) {
+    if (isUser) {
       next({
         path: "/"
       });
