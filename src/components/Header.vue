@@ -23,10 +23,11 @@
           <b-nav-item v-if="!user" active-class="active" to="/register">
             <span>Register</span>
           </b-nav-item>
-          <div class="d-none d-md-flex">
+          <div class="position-relative d-md-flex">
             <div
               v-if="user"
-              class="d-flex justify-content-center align-items-center"
+              class=" d-flex justify-content-center align-items-center"
+              @click="open = !open"
             >
               <div class="topbar-divider"></div>
               <p class="align-middle my-0 mr-3">
@@ -37,6 +38,15 @@
                 :text="user.name[0] + user.surname[0]"
               ></b-avatar>
             </div>
+            <transition name="list">
+              <ul class="superDropdown w-100" v-show="open">
+                <li class="d-block">xd</li>
+                <li class="d-block">xd</li>
+                <li class="d-block">xd</li>
+                <li class="d-block">xd</li>
+                <li class="d-block">xd</li>
+              </ul>
+            </transition>
           </div>
         </b-navbar-nav>
       </b-collapse>
@@ -45,12 +55,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import user from "@/store/modules/user";
 import { User } from "../store/models";
 
 @Component
 export default class Header extends Vue {
+  open = false;
+
+  @Watch("open")
+  xdd(prev, xd) {
+    console.log(xd);
+  }
+
   get user(): User | null {
     return user.userData;
   }
@@ -63,6 +80,33 @@ export default class Header extends Vue {
   border-right: 1px solid #e3e6f0;
   height: 2.375rem;
   margin: auto 1rem;
+}
+.superDropdown {
+  display: block;
+  position: absolute;
+  list-style: none;
+  padding: 1rem;
+  top: calc(100% + 0.5rem);
+  color: red;
+  background-color: light;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.list-enter {
+  opacity: 0;
+}
+
+.list-enter-active {
+  transition: opacity 0.25s ease;
+}
+
+.list-leave {
+}
+
+.list-leave-active {
+  transition: opacity 0.25s ease;
+  opacity: 0;
+  transition: all 0.3s;
 }
 .navbar {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);

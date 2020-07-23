@@ -32,6 +32,7 @@ export default class Home extends Vue {}
 .img {
   margin: 0 auto;
   height: 60vh;
+  width: 100%;
 }
 @media (max-width: 400px) {
   .img {

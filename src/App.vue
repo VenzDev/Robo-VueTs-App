@@ -2,7 +2,9 @@
   <div id="app">
     <Header />
     <div class="wrapper">
-      <router-view />
+      <transition name="fade" mode="out-in">
+        <router-view />
+      </transition>
     </div>
   </div>
 </template>
@@ -19,5 +21,20 @@ export default class App extends Vue {}
 .wrapper {
   min-height: 100vh;
   padding-top: 100px;
+}
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: opacity 0.25s ease;
+}
+
+.fade-leave {
+}
+
+.fade-leave-active {
+  transition: opacity 0.25s ease;
+  opacity: 0;
 }
 </style>
