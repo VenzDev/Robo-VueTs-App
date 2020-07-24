@@ -100,9 +100,6 @@ export default class Header extends Vue {
   transition: opacity 0.25s ease;
 }
 
-.list-leave {
-}
-
 .list-leave-active {
   transition: opacity 0.25s ease;
   opacity: 0;

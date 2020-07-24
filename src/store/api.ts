@@ -27,3 +27,10 @@ export const apiAuth = async () => {
   const fetchedData = await axios.get("/user/auth");
   return fetchedData.data;
 };
+
+export const apiUsers = async () => {
+  const fetchedData = await axios.get(
+    "https://jsonplaceholder.typicode.com/users"
+  );
+  return fetchedData.data;
+};
