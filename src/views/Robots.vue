@@ -1,11 +1,39 @@
 <template>
   <b-container>
-    <b-row class="p-3">
-      <h3 v-show="users">Your Robots</h3>
+    <b-row class="d-block d-sm-flex p-3">
+      <h3 class="mr-5 my-3 my-sm-0" v-show="users">Your Robots</h3>
+      <b-pagination
+        class="mr-5"
+        v-model="currentPage"
+        :total-rows="rows"
+        :per-page="perPage"
+        aria-controls="my-table"
+      ></b-pagination>
+      <div>
+        <b-input-group prepend="per page">
+          <b-form-input v-model="perPage"></b-form-input>
+        </b-input-group>
+      </div>
     </b-row>
-    <b-row>
+    <b-row class="pl-3 pb-3 align-items-center">
+      <div>
+        <b-input-group prepend="search">
+          <b-form-input class="mr-5" v-model="searchInput"></b-form-input>
+        </b-input-group>
+      </div>
+      <b-dropdown id="dropdown-1" text="Sort By" class="m-md-2">
+        <b-dropdown-item
+          v-for="option in options"
+          :key="option.key"
+          :value="option.value"
+          @click="selectedSort = option.value"
+          >{{ option.text }}</b-dropdown-item
+        >
+      </b-dropdown>
+    </b-row>
+    <b-row v-if="!isLoading">
       <b-col
-        v-for="user in users"
+        v-for="user in filteredData"
         v-bind:key="user.id"
         class=" col-12 col-sm-6 col-md-4 col-xl-3 my-2"
       >
@@ -19,23 +47,59 @@
         </b-card>
       </b-col>
     </b-row>
+    <b-row v-else>Loading</b-row>
   </b-container>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import { Vue, Component, Watch } from "vue-property-decorator";
 import { apiUsers } from "../store/api";
 
-Component.registerHooks(["created"]);
+interface User {
+  name: string;
+}
 
 @Component
 export default class Robots extends Vue {
-  users: Array<object> | null = null;
+  users: Array<User> | null = null;
+  isLoading = false;
+  searchInput = "";
+  selectedSort = "";
+
+  options = [
+    { value: "name", text: "by name" },
+    { value: "b", text: "Selected Option" },
+    { value: "c", text: "This is an option with object value" }
+  ];
+
+  perPage = 4;
+  currentPage = 1;
+  rows = 10;
+
   async created() {
+    this.isLoading = true;
     const data = await apiUsers();
     this.users = data;
-    console.log(data);
+    this.isLoading = false;
+  }
+
+  handleSort(e: Event) {
+    console.log(e.target as HTMLInputElement);
+  }
+
+  get filteredData() {
+    const from = this.currentPage * this.perPage - this.perPage;
+    const to = this.currentPage * this.perPage;
+    const filteredUsers = this.users!.filter(user => {
+      return user.name.toLowerCase().includes(this.searchInput.toLowerCase());
+    });
+    this.rows = filteredUsers.length;
+    console.log(this.selectedSort);
+    if (this.selectedSort === "name")
+      return filteredUsers.slice(from, to).sort((a, b) => {
+        return a.name >= b.name ? -1 : 1;
+      });
+    else return filteredUsers.slice(from, to);
   }
 }
 </script>
