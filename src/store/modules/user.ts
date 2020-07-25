@@ -8,6 +8,7 @@ import {
 import store from "@/store";
 import { User, UserResponse, UserSubmit, UserAuthResponse } from "../models";
 import { apiLogin, apiAuth } from "../api";
+import router from "@/router";
 
 @Module({
   namespaced: true,
@@ -65,6 +66,12 @@ class UserModule extends VuexModule {
       localStorage.removeItem("token");
       throw new Error(err.response.data.message);
     }
+  }
+  @Action({ rawError: true })
+  logout() {
+    localStorage.removeItem("token");
+    this.context.commit("setUser", null);
+    if (router.currentRoute.path !== "/") router.push("/");
   }
 }
 

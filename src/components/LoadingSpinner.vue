@@ -2,6 +2,15 @@
   <div class="lds-dual-ring"></div>
 </template>
 
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+
+@Component
+export default class LoadingSpinner extends Vue {
+  @Prop({ default: "white" }) private color!: string;
+}
+</script>
+
 <style lang="scss" scoped>
 .lds-dual-ring {
   display: inline-block;
@@ -14,9 +23,9 @@
   width: 32px;
   height: 32px;
   margin: 8px;
+  border: 6px solid black;
+  border-color: black transparent black transparent;
   border-radius: 50%;
-  border: 6px solid #fff;
-  border-color: #fff transparent #fff transparent;
   animation: lds-dual-ring 1.2s linear infinite;
 }
 @keyframes lds-dual-ring {
