@@ -17,7 +17,9 @@
     </div>
     <transition name="list">
       <ul class="superDropdown w-100" v-if="open">
-        <li class="d-block">Account</li>
+        <li class="d-block">
+          <router-link class="userLink" to="/user">Account</router-link>
+        </li>
         <li class="d-block" @click="logout">Logout</li>
       </ul>
     </transition>
@@ -51,6 +53,11 @@ export default class UserDropdown extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.userLink {
+  text-decoration: none;
+  color: inherit;
+}
+
 .superDropdown {
   display: block;
   position: absolute;

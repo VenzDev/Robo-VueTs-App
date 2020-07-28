@@ -6,8 +6,15 @@ import {
   Action
 } from "vuex-module-decorators";
 import store from "@/store";
-import { User, UserResponse, UserSubmit, UserAuthResponse } from "../models";
-import { apiLogin, apiAuth } from "../api";
+import {
+  User,
+  UserResponse,
+  UserSubmit,
+  UserAuthResponse,
+  AddRobotSubmit,
+  Robot
+} from "../models";
+import { apiLogin, apiAuth, apiAddRobot } from "../api";
 import router from "@/router";
 
 @Module({
@@ -37,6 +44,10 @@ class UserModule extends VuexModule {
   setErrorMessage(message: string) {
     this.errorMessage = message;
   }
+  @Mutation
+  setNewRobots(robots: Array<Robot>) {
+    if (this.user !== null) this.user.robots = robots;
+  }
 
   @Action({ rawError: true })
   async login(userSubmit: UserSubmit) {
@@ -49,7 +60,8 @@ class UserModule extends VuexModule {
       this.context.commit("setUser", {
         name: data.name,
         surname: data.surname,
-        email: data.email
+        email: data.email,
+        robots: data.robots
       });
       return "success";
     } catch (err) {
@@ -72,6 +84,15 @@ class UserModule extends VuexModule {
     localStorage.removeItem("token");
     this.context.commit("setUser", null);
     if (router.currentRoute.path !== "/") router.push("/");
+  }
+  @Action({ rawError: true })
+  async addRobot(robot: AddRobotSubmit) {
+    try {
+      const data: Array<Robot> = await apiAddRobot(robot);
+      this.context.commit("setNewRobots", data);
+    } catch (err) {
+      throw new Error(err.response.data.message);
+    }
   }
 }
 

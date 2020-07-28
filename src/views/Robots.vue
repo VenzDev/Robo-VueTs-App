@@ -22,12 +22,12 @@
         </b-col>
       </b-row>
       <b-row class="pb-3 align-items-center">
-        <b-col class="col-12 col-sm-6 col-md-4">
+        <b-col class="col-12 col-sm-4">
           <b-input-group prepend="search">
             <b-form-input v-model="searchInput"></b-form-input>
           </b-input-group>
         </b-col>
-        <b-col class="col-12 col-sm-6 col-md-8 my-3">
+        <b-col class="col-12 col-sm-4 my-3">
           <b-dropdown id="dropdown-1" text="Sort By">
             <b-dropdown-item
               v-for="option in options"
@@ -38,21 +38,27 @@
             >
           </b-dropdown>
         </b-col>
+        <b-col class="col-12 col-sm-4">
+          <b-button v-b-modal.modal-1 variant="primary">Add Robot</b-button>
+        </b-col>
       </b-row>
+      <AddRobotModal />
       <b-row>
         <b-col
           v-for="user in filteredData"
           v-bind:key="user.id"
           class="col-12 col-sm-6 col-md-4 col-xl-3 my-2"
         >
-          <b-card class="shadow roboCard">
-            <img
-              class="roboImg"
-              :src="'https://robohash.org/' + user.name"
-              alt=""
-            />
-            <h5 class="text-center p-3">{{ user.name }}</h5>
-          </b-card>
+          <router-link class="link" :to="'/robot/' + user.id">
+            <b-card class="shadow roboCard">
+              <img
+                class="roboImg"
+                :src="'https://robohash.org/' + user.name"
+                alt="Robot"
+              />
+              <h5 class="text-center p-3">{{ user.name }}</h5>
+            </b-card>
+          </router-link>
         </b-col>
       </b-row>
     </div>
@@ -64,12 +70,13 @@
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Vue, Component } from "vue-property-decorator";
 import { apiUsers } from "../store/api";
+import AddRobotModal from "@/components/AddRobotModal";
 
 interface User {
   name: string;
 }
 
-@Component({ components: { LoadingSpinner } })
+@Component({ components: { LoadingSpinner, AddRobotModal } })
 export default class Robots extends Vue {
   users: Array<User> | null = null;
   isLoading = false;
@@ -93,10 +100,6 @@ export default class Robots extends Vue {
     this.isLoading = false;
   }
 
-  handleSort(e: Event) {
-    console.log(e.target as HTMLInputElement);
-  }
-
   get filteredData() {
     const from = this.currentPage * this.perPage - this.perPage;
     const to = this.currentPage * this.perPage;
@@ -118,6 +121,10 @@ export default class Robots extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.link {
+  text-decoration: none;
+  color: inherit;
+}
 .roboImg {
   width: 100%;
   min-width: 100px;

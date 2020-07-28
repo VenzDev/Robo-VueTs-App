@@ -36,6 +36,24 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "Robots" */ "../views/Robots.vue")
   },
   {
+    path: "/robot/:id",
+    name: "Robot",
+    meta: {
+      logged: true
+    },
+    component: () =>
+      import(/* webpackChunkName: "Robot" */ "../views/Robot.vue")
+  },
+  {
+    path: "/user",
+    name: "User",
+    meta: {
+      logged: true
+    },
+    component: () => import(/* webpackChunkName: "User" */ "../views/User.vue")
+  },
+
+  {
     path: "/register",
     name: "Register",
     meta: {

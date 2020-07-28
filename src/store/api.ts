@@ -1,7 +1,7 @@
 import axios from "axios";
-import { UserResponse, RegisterSubmit } from "./models";
+import { UserResponse, RegisterSubmit, AddRobotSubmit } from "./models";
 
-axios.defaults.baseURL = "https://vue10.herokuapp.com";
+axios.defaults.baseURL = "http://localhost:3000";
 
 axios.interceptors.request.use(req => {
   const token = localStorage.getItem("token");
@@ -32,5 +32,17 @@ export const apiUsers = async () => {
   const fetchedData = await axios.get(
     "https://jsonplaceholder.typicode.com/users"
   );
+  return fetchedData.data;
+};
+
+export const apiUserById = async (id: string) => {
+  const fetchedData = await axios.get(
+    `https://jsonplaceholder.typicode.com/users?id=${id}`
+  );
+  return fetchedData.data;
+};
+
+export const apiAddRobot = async (robotSubmit: AddRobotSubmit) => {
+  const fetchedData = await axios.post("/user/addRobot", robotSubmit);
   return fetchedData.data;
 };

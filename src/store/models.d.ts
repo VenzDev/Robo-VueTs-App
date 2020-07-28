@@ -2,6 +2,7 @@ export interface User {
   name: string;
   surname: string;
   email: string;
+  robots: Array<Robot> | [];
 }
 export interface UserResponse {
   id: string;
@@ -9,6 +10,7 @@ export interface UserResponse {
   surname: string;
   email: string;
   token: string;
+  robots: Array<Robot> | [];
 }
 
 export interface UserSubmit {
@@ -27,8 +29,22 @@ export interface RegisterSubmit {
   email: string;
   password: string;
 }
+export interface AddRobotSubmit {
+  name: string;
+  surname: string;
+  email: string;
+  country: string;
+}
 export interface UserAuthResponse {
   name: string;
   surname: string;
   email: string;
+  robots: Array<Robot> | [];
+}
+export interface Robot {
+  name: string;
+  surname: string;
+  email: string;
+  country: string;
+  user: string;
 }
