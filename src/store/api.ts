@@ -1,5 +1,10 @@
 import axios from "axios";
-import { UserResponse, RegisterSubmit, AddRobotSubmit } from "./models";
+import {
+  UserResponse,
+  RegisterSubmit,
+  AddRobotSubmit,
+  EditRobotSubmit
+} from "./models";
 
 axios.defaults.baseURL = "http://localhost:3000";
 
@@ -35,14 +40,23 @@ export const apiUsers = async () => {
   return fetchedData.data;
 };
 
-export const apiUserById = async (id: string) => {
-  const fetchedData = await axios.get(
-    `https://jsonplaceholder.typicode.com/users?id=${id}`
-  );
+export const apiRobotById = async (id: string) => {
+  const fetchedData = await axios.get(`/user/findRobot?robotId=${id}`);
   return fetchedData.data;
 };
 
 export const apiAddRobot = async (robotSubmit: AddRobotSubmit) => {
   const fetchedData = await axios.post("/user/addRobot", robotSubmit);
+  return fetchedData.data;
+};
+
+export const apiDeleteRobot = async (id: string) => {
+  const fetchedData = await axios.post("/user/deleteRobot?robotId=" + id);
+  return fetchedData.data;
+};
+
+export const apiEditRobot = async (editRobotSubmit: EditRobotSubmit) => {
+  console.log(editRobotSubmit);
+  const fetchedData = await axios.post("/user/editRobot", editRobotSubmit);
   return fetchedData.data;
 };

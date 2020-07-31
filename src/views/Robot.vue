@@ -9,17 +9,17 @@
       <b-row>
         <b-col class="col-12 col-md-6 p-3 ">
           <b-card class="shadow">
-            <h2>{{ user.name }}</h2>
-            <h4>{{ user.email }}</h4>
-            <h4>{{ user.company.bs }}</h4>
-            <p>{{ user.address.city }}</p>
-            <p>{{ user.address.street }}</p>
-            <p>{{ user.address.zipcode }}</p>
+            <h2>{{ "Name: " + robot.name }}</h2>
+            <h4>{{ "Surname: " + robot.surname }}</h4>
+            <h4>{{ robot.email }}</h4>
+            <p>{{ robot.country }}</p>
+            <p>{{ "Created: " + createdDate }}</p>
+            <p>{{ "Updated: " + updatedDate }}</p>
           </b-card>
         </b-col>
         <b-col class="col-12 col-md-6 p-3">
           <b-card class="shadow align-items-center">
-            <img :src="'https://robohash.org/' + user.name" alt="robot" />
+            <img :src="'https://robohash.org/' + robot.name" alt="robot" />
           </b-card>
         </b-col>
       </b-row>
@@ -30,9 +30,9 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { apiUserById } from "../store/api";
+import { apiRobotById } from "../store/api";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
-
+import { RobotModel } from "@/store/models";
 @Component({
   components: {
     LoadingSpinner
@@ -40,17 +40,26 @@ import LoadingSpinner from "@/components/LoadingSpinner.vue";
 })
 export default class Robot extends Vue {
   isLoading = false;
-  user: object | null = null;
+  robot: RobotModel | null = null;
 
   get paramId() {
     return this.$route.params.id;
   }
+  get createdDate() {
+    if (this.robot === null) return "empty";
+    const date = new Date(this.robot.createdAt);
+    return date.toLocaleString();
+  }
+
+  get updatedDate() {
+    if (this.robot === null) return "empty";
+    const date = new Date(this.robot.updatedAt);
+    return date.toLocaleString();
+  }
   async created() {
     this.isLoading = true;
-    const data = await apiUserById(this.paramId);
-    this.user = data[0];
+    this.robot = await apiRobotById(this.paramId);
     this.isLoading = false;
-    console.log(this.user);
   }
 }
 </script>

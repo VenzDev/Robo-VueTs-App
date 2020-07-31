@@ -5,6 +5,7 @@ import store from "./store";
 import VueToast from "vue-toast-notification";
 import VueWait from "vue-wait";
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
+import feather from "vue-icon";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import "vue-toast-notification/dist/theme-default.css";
@@ -12,6 +13,7 @@ import "vue-toast-notification/dist/theme-default.css";
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
+Vue.use(feather, "v-icon");
 Vue.use(VueToast);
 Vue.use(VueWait);
 

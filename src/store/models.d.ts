@@ -2,7 +2,7 @@ export interface User {
   name: string;
   surname: string;
   email: string;
-  robots: Array<Robot> | [];
+  robots: Array<RobotModel> | [];
 }
 export interface UserResponse {
   id: string;
@@ -10,7 +10,7 @@ export interface UserResponse {
   surname: string;
   email: string;
   token: string;
-  robots: Array<Robot> | [];
+  robots: Array<RobotModel> | [] | null;
 }
 
 export interface UserSubmit {
@@ -35,16 +35,26 @@ export interface AddRobotSubmit {
   email: string;
   country: string;
 }
+export interface EditRobotSubmit {
+  robotId: string;
+  name: string;
+  surname: string;
+  email: string;
+  country: string;
+}
 export interface UserAuthResponse {
   name: string;
   surname: string;
   email: string;
-  robots: Array<Robot> | [];
+  robots: Array<RobotModel> | [];
 }
-export interface Robot {
+export interface RobotModel {
+  _id: string;
   name: string;
   surname: string;
   email: string;
   country: string;
   user: string;
+  updatedAt: Date;
+  createdAt: Date;
 }

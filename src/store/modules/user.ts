@@ -12,9 +12,16 @@ import {
   UserSubmit,
   UserAuthResponse,
   AddRobotSubmit,
-  Robot
+  RobotModel,
+  EditRobotSubmit
 } from "../models";
-import { apiLogin, apiAuth, apiAddRobot } from "../api";
+import {
+  apiLogin,
+  apiAuth,
+  apiAddRobot,
+  apiDeleteRobot,
+  apiEditRobot
+} from "../api";
 import router from "@/router";
 
 @Module({
@@ -31,6 +38,10 @@ class UserModule extends VuexModule {
     return this.user;
   }
 
+  get robots() {
+    return this.user?.robots;
+  }
+
   get errorMessageGetter() {
     return this.errorMessage;
   }
@@ -45,7 +56,7 @@ class UserModule extends VuexModule {
     this.errorMessage = message;
   }
   @Mutation
-  setNewRobots(robots: Array<Robot>) {
+  setNewRobots(robots: Array<RobotModel>) {
     if (this.user !== null) this.user.robots = robots;
   }
 
@@ -76,7 +87,7 @@ class UserModule extends VuexModule {
       this.context.commit("setUser", data);
     } catch (err) {
       localStorage.removeItem("token");
-      throw new Error(err.response.data.message);
+      console.log(err.response.data.message);
     }
   }
   @Action({ rawError: true })
@@ -88,7 +99,26 @@ class UserModule extends VuexModule {
   @Action({ rawError: true })
   async addRobot(robot: AddRobotSubmit) {
     try {
-      const data: Array<Robot> = await apiAddRobot(robot);
+      const data: Array<RobotModel> = await apiAddRobot(robot);
+      this.context.commit("setNewRobots", data);
+    } catch (err) {
+      throw new Error(err.response.data.message);
+    }
+  }
+  @Action({ rawError: true })
+  async deleteRobot(id: string) {
+    try {
+      const data: Array<RobotModel> = await apiDeleteRobot(id);
+      this.context.commit("setNewRobots", data);
+    } catch (err) {
+      throw new Error(err.response.data.message);
+    }
+  }
+
+  @Action({ rawError: true })
+  async editRobot(editRobot: EditRobotSubmit) {
+    try {
+      const data: Array<RobotModel> = await apiEditRobot(editRobot);
       this.context.commit("setNewRobots", data);
     } catch (err) {
       throw new Error(err.response.data.message);
